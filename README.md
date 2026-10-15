@@ -29,7 +29,7 @@ Kept to one page. It's a handoff, not a report — the new session can read the 
 Claude Code loads skills from `~/.claude/skills/`. Clone this repo anywhere and symlink (or copy) the `handoff/` directory in:
 
 ```bash
-git clone https://github.com/heartwar9420/claude-handoff-skill.git
+git clone https://github.com/junwang-swe/claude-handoff-skill.git
 mkdir -p ~/.claude/skills
 ln -sfn "$(pwd)/claude-handoff-skill/handoff" ~/.claude/skills/handoff
 ```
