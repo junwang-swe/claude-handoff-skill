@@ -456,16 +456,24 @@ def cmd_hook_claim(args):
         if f.name in prompt or (len(content) >= 80 and content[:200] in prompt):
             claimed.append(f)
     # Also accept a pasted Obsidian note name: "issue -<num> handoff".
+    note_only = []
     for m in re.finditer(r"issue -(\d+) handoff", prompt):
-        for f in HANDOFF_DIR.glob(f"*__*{m.group(1)}*.md"):
+        files = list(HANDOFF_DIR.glob(f"*__*{m.group(1)}*.md"))
+        for f in files:
             if f not in claimed:
                 claimed.append(f)
+        if not files and m.group(1) not in note_only:
+            # Note exists in the vault but has no file in HANDOFF_DIR: tick the note itself.
+            note_only.append(m.group(1))
 
     for f in claimed:
         try:
             claim_handoff_file(f, vault_path)
         except Exception as e:
             print(f"[handoff claim] 失敗 {f.name}: {e}", file=sys.stderr)
+    for num in note_only:
+        print(f"[handoff claim] issue -{num} handoff（僅筆記，無交接檔）")
+        mark_note_done(vault_path, num, f"issue-{num}")
 
 
 def cmd_list(args):
